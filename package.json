@@ -4,7 +4,8 @@
   "description": "React components for Leaflet",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "babel src -d lib --watch --source-maps --only react.map.js,leaflet/src,react-map-gl/src"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,16 @@
   "homepage": "https://github.com/cascadian/releaf#readme",
   "devDependencies": {
     "babel-cli": "^6.22.2",
-    "babel-plugin-transform-decorators": "^6.22.0"
+    "babel-plugin-transform-decorators": "^6.22.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "babel-preset-stage-2": "^6.22.0"
+  },
+  "dependencies": {
+    "bowser": "^1.6.0",
+    "immutable": "^3.8.1",
+    "leaflet": "^1.0.3",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
   }
 }
