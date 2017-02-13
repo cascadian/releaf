@@ -2,7 +2,3 @@
 	path = src/react-map-gl
 	url = https://github.com/cascadian/react-map-gl
 	branch = releaf
-[submodule "src/leaflet"]
-	path = src/leaflet
-	url = https://github.com/cascadian/leaflet
-	branch = releaf
