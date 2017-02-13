@@ -1,0 +1,27 @@
+{
+  "name": "@cascadian/releaf",
+  "version": "0.1.0",
+  "description": "React components for Leaflet",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cascadian/releaf.git"
+  },
+  "keywords": [
+    "React",
+    "Leaflet"
+  ],
+  "author": "github.com/cascadian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cascadian/releaf/issues"
+  },
+  "homepage": "https://github.com/cascadian/releaf#readme",
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-plugin-transform-decorators": "^6.22.0"
+  }
+}
