@@ -171,7 +171,28 @@ const DEFAULT_PROPS = {
 
 class Map extends Component {
   componentDidMount() {
-    this.leafletMap = Leaflet.map(this.leafletElement).setView([this.props.latitude, this.props.longitude], this.props.zoom);
+    const {mapStyle, latitude, longitude, zoom} = this.props;
+    this.leafletMap = Leaflet.map(this.leafletElement, {
+      dragging: false,
+      touchZoom: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false,
+      boxZoom: false,
+      tap: false,
+      trackResize: false,
+      worldCopyJump: false,
+      bounceAtZoomLimits: false,
+      closePopupOnClick: false
+    }).setView([latitude, longitude], zoom);
+    if (mapStyle) {
+      const sources = mapStyle.get("sources");
+      const layers = mapStyle.get('layers');
+      layers.filter(v => v.get('type') == 'raster')
+      .forEach(v => {
+        const {tileSize, tiles} = sources.get(v.get("source")).toJS();
+        Leaflet.tileLayer(tiles[0]).addTo(this.leafletMap);
+      });
+    }
   }
   render() {
     const {style, width, height} = this.props;
