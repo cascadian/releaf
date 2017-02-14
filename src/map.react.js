@@ -25,16 +25,15 @@ import Point from 'point-geometry';
 import Immutable from 'immutable';
 import assert from 'assert';
 
-import Interactions from '@cascadian/react-map-gl/dist/map-interactions.react';
-import config from '@cascadian/react-map-gl/dist/config';
+import Interactions from 'react-map-gl/dist/map-interactions.react';
+import config from 'react-map-gl/dist/config';
 
-import {getInteractiveLayerIds} from '@cascadian/react-map-gl/dist/utils/style-utils';
-import diffStyles from '@cascadian/react-map-gl/dist/utils/diff-styles';
-import {mod, unprojectFromTransform, cloneTransform} from '@cascadian/react-map-gl/dist/utils/transform';
+import {getInteractiveLayerIds} from 'react-map-gl/dist/utils/style-utils';
+import diffStyles from 'react-map-gl/dist/utils/diff-styles';
+import {mod, unprojectFromTransform, cloneTransform} from 'react-map-gl/dist/utils/transform';
+import Leaflet from 'leaflet';
 
-import Transform from '@cascadian/react-map-gl/dist/utils/transform';
-console.log("interactions ");
-console.dir(Interactions);
+import Transform from 'react-map-gl/dist/utils/transform';
 
 function noop() {}
 
@@ -246,7 +245,7 @@ export default class LeafletMap extends Component {
       this.props.mapStyle.toJS() :
       this.props.mapStyle;
 
-    const {zoom, maxZoom} = this.props;
+    const {zoom, maxZoom, latitude, longitude} = this.props;
 
     this.leafletMap = this._map = Leaflet.map(this.leafletElement, {
       zoom,
