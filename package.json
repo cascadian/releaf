@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "babel src -d lib --watch --source-maps --only react.map.js,leaflet/src,react-map-gl/src"
+    "watch": "babel src -d lib --watch --source-maps --ignore node_modules,dist,lib,example,test"
   },
   "repository": {
     "type": "git",
@@ -29,9 +29,15 @@
     "babel-preset-stage-2": "^6.22.0"
   },
   "dependencies": {
+    "assert": "^1.4.1",
+    "autobind-decorator": "^1.3.4",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "bowser": "^1.6.0",
+    "global": "^4.3.1",
     "immutable": "^3.8.1",
     "leaflet": "^1.0.3",
+    "point-geometry": "^0.1.0",
+    "pure-render-decorator": "^1.2.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   }

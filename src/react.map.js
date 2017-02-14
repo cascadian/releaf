@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import config from './react-map-gl/src/config';
+import config from '@cascadian/react-map-gl/dist/config';
 import Leaflet from 'leaflet';
 import Immutable from 'immutable';
 

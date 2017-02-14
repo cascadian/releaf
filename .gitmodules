@@ -1,4 +1,0 @@
-[submodule "src/react-map-gl"]
-	path = src/react-map-gl
-	url = https://github.com/cascadian/react-map-gl
-	branch = releaf
