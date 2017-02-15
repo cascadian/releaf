@@ -25,15 +25,15 @@ import Point from 'point-geometry';
 import Immutable from 'immutable';
 import assert from 'assert';
 
-import Interactions from 'react-map-gl/dist/map-interactions.react';
-import config from 'react-map-gl/dist/config';
+import Interactions from '@cascadian/react-map-gl/dist/map-interactions.react';
+import config from '@cascadian/react-map-gl/dist/config';
 
-import {getInteractiveLayerIds} from 'react-map-gl/dist/utils/style-utils';
-import diffStyles from 'react-map-gl/dist/utils/diff-styles';
-import {mod, unprojectFromTransform, cloneTransform} from 'react-map-gl/dist/utils/transform';
+import {getInteractiveLayerIds} from '@cascadian/react-map-gl/dist/utils/style-utils';
+import diffStyles from '@cascadian/react-map-gl/dist/utils/diff-styles';
+import {mod, unprojectFromTransform, cloneTransform} from '@cascadian/react-map-gl/dist/utils/transform';
 import Leaflet from 'leaflet';
 
-import Transform from 'react-map-gl/dist/utils/transform';
+import Transform from '@cascadian/react-map-gl/dist/utils/transform';
 
 function noop() {}
 
@@ -221,6 +221,7 @@ export default class LeafletMap extends Component {
     super(props);
     const {minZoom, maxZoom, renderWorldCopies} = props;
     this.transform = new Transform(minZoom, maxZoom, renderWorldCopies);
+    this.transform.tileSize = 256;
     this.state = {
       isSupported: true,
       isDragging: false,
@@ -241,13 +242,11 @@ export default class LeafletMap extends Component {
   }
 
   componentDidMount() {
-    const mapStyle = Immutable.Map.isMap(this.props.mapStyle) ?
-      this.props.mapStyle.toJS() :
-      this.props.mapStyle;
+    const mapStyle = this.props.mapStyle;
 
-    const {zoom, maxZoom, latitude, longitude} = this.props;
+    const {zoom, maxZoom, latitude, longitude, width, height} = this.props;
 
-    this.leafletMap = this._map = Leaflet.map(this.leafletElement, {
+    const map = this.leafletMap = this._map = Leaflet.map(this.leafletElement, {
       zoom,
       maxZoom,
       center: [latitude, longitude],
@@ -263,12 +262,18 @@ export default class LeafletMap extends Component {
       closePopupOnClick: false,
       keyboard: false
     });
-    if (mapStyle) {
+    
+    this.transform.resize(width, height);
+    this.transform.zoom = zoom;
+    this.transform.center = {lat: latitude, lng: longitude};
+    
+    map.transform = this.transform;
+    if (Immutable.Map.isMap(this.props.mapStyle)) {
       const sources = mapStyle.get("sources");
       const layers = mapStyle.get('layers');
-      layers.filter(v => v.get('type') == 'raster')
+      layers.filter(v => v.get('type') === 'raster')
       .forEach(v => {
-        const {tileSize, tiles} = sources.get(v.get("source")).toJS();
+        const {tiles} = sources.get(v.get("source")).toJS();
         Leaflet.tileLayer(tiles[0]).addTo(this.leafletMap);
       });
     }
@@ -472,6 +477,11 @@ export default class LeafletMap extends Component {
         lng: newProps.longitude,
         lat: newProps.latitude
       }, newProps.zoom);
+      this._map.transform.center = {
+        lat: newProps.latitude,
+        lng: newProps.longitude
+      };
+      this._map.transform.zoom = newProps.zoom;
     }
   }
 
@@ -686,21 +696,21 @@ export default class LeafletMap extends Component {
     if (this.state.isSupported && this.props.onChangeViewport) {
       content = (
         <Interactions
-          onMouseDown ={ this._onMouseDown }
-          onMouseDrag ={ this._onMouseDrag }
-          onMouseRotate ={ this._onMouseRotate }
-          onMouseUp ={ this._onMouseUp }
-          onMouseMove ={ this._onMouseMove }
-          onMouseClick = { this._onMouseClick }
-          onTouchStart ={ this._onTouchStart }
-          onTouchDrag ={ this._onTouchDrag }
-          onTouchRotate ={ this._onTouchRotate }
-          onTouchEnd ={ this._onTouchEnd }
-          onTouchTap = { this._onTouchTap }
-          onZoom ={ this._onZoom }
-          onZoomEnd ={ this._onZoomEnd }
-          width ={ this.props.width }
-          height ={ this.props.height }>
+          onMouseDown={ this._onMouseDown }
+          onMouseDrag={ this._onMouseDrag }
+          onMouseRotate={ this._onMouseRotate }
+          onMouseUp={ this._onMouseUp }
+          onMouseMove={ this._onMouseMove }
+          onMouseClick={ this._onMouseClick }
+          onTouchStart={ this._onTouchStart }
+          onTouchDrag={ this._onTouchDrag }
+          onTouchRotate={ this._onTouchRotate }
+          onTouchEnd={ this._onTouchEnd }
+          onTouchTap={ this._onTouchTap }
+          onZoom={ this._onZoom }
+          onZoomEnd={ this._onZoomEnd }
+          width={ this.props.width }
+          height={ this.props.height }>
 
           { content }
 
