@@ -221,7 +221,6 @@ export default class LeafletMap extends Component {
     super(props);
     const {minZoom, maxZoom, renderWorldCopies} = props;
     this.transform = new Transform(minZoom, maxZoom, renderWorldCopies);
-    this.transform.tileSize = 256;
     this.state = {
       isSupported: true,
       isDragging: false,
@@ -246,8 +245,11 @@ export default class LeafletMap extends Component {
 
     const {zoom, maxZoom, latitude, longitude, width, height} = this.props;
 
-    const map = this.leafletMap = this._map = Leaflet.map(this.leafletElement, {
-      zoom,
+    const map = this._map = Leaflet.map(this.leafletElement, {
+      // leaflet zoom and mapbox-gl zoom levels are off by one
+      zoom: zoom + 1,
+      // enable fractional zoom
+      zoomSnap: 0,
       maxZoom,
       center: [latitude, longitude],
       dragging: false,
@@ -266,7 +268,7 @@ export default class LeafletMap extends Component {
     this.transform.resize(width, height);
     this.transform.zoom = zoom;
     this.transform.center = {lat: latitude, lng: longitude};
-    
+
     map.transform = this.transform;
     if (Immutable.Map.isMap(this.props.mapStyle)) {
       const sources = mapStyle.get("sources");
@@ -274,7 +276,7 @@ export default class LeafletMap extends Component {
       layers.filter(v => v.get('type') === 'raster')
       .forEach(v => {
         const {tiles} = sources.get(v.get("source")).toJS();
-        Leaflet.tileLayer(tiles[0]).addTo(this.leafletMap);
+        Leaflet.tileLayer(tiles[0]).addTo(map);
       });
     }
 
@@ -476,7 +478,11 @@ export default class LeafletMap extends Component {
       this._map.setView({
         lng: newProps.longitude,
         lat: newProps.latitude
-      }, newProps.zoom);
+      }, 
+      // leaflet zoom and mapbox-gl zoom levels are off by one
+      newProps.zoom + 1, 
+      // disable pan animation to match behavior or mapbox-gl
+      {animate: false});
       this._map.transform.center = {
         lat: newProps.latitude,
         lng: newProps.longitude
@@ -491,6 +497,7 @@ export default class LeafletMap extends Component {
       oldProps.width !== newProps.width || oldProps.height !== newProps.height;
 
     if (sizeChanged) {
+      this._map.transform.resize(newProps.width, newProps.height);
       this._map.invalidateSize();
       this._callOnChangeViewport(this._map.transform);
     }
