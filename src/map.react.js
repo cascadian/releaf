@@ -250,6 +250,7 @@ export default class LeafletMap extends Component {
       zoom: zoom + 1,
       // enable fractional zoom
       zoomSnap: 0,
+      zoomControl: false,
       maxZoom,
       center: [latitude, longitude],
       dragging: false,
